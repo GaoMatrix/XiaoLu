@@ -1,0 +1,36 @@
+#label day51:
+    #scene garden
+    #with fade
+    #play music "music\3.bgm.mp3" fadein 1
+    show crister 
+    with dissolve
+    $ emo = smile
+    leia "克里斯特，好久不见了。你终于没事了！"
+    crister "嗯，这段时间多亏你了，蕾雅。总算结束了。"
+    leia "嗯，没事！对了！克里斯特！这个....给你！"
+    show crister surprise
+    with dissolve
+    crister "这是....."
+    $ emo = laugh
+    leia "这是按照营养搭配做的恢复元气的便当！你要全部吃掉，不许剩哦~"
+    show crister sad
+    with dissolve
+    crister "蕾雅...."
+    $ emo = sad
+    leia "你当时受了那么严重的伤，把我给吓坏了...所以，从今天起一周之内，你都得吃这个！不然我实在是放心不下..."
+    show crister smile
+    with dissolve
+    crister "..嗯....谢谢你，蕾雅！我会好好吃光的！（...真的...谢谢...这就是朋友吗，真好...）"
+    $ emo = smile
+    leia "没事啦"
+    show crister laugh
+    with dissolve
+    crister "哈哈，对了蕾雅，明天晚上有空吗？"
+    $ emo = laugh
+    leia "有啊，怎么了？"
+    crister "那太好了！那就明天晚上放学后校门口见哦"
+    $ emo = awkward
+    leia "	....呃，好。"
+    crister "哈哈，一定要记得哦，那就明天见啦！"
+    $ emo = surprise
+    leia "...呃...跑这么快，生怕我问他一样...神神秘秘的..."
