@@ -12,23 +12,29 @@ import javax.swing.JFileChooser;
 
 public class MainTextProcessing {
     private static final String[] mFeelingsCN = {
-            "【微笑】", "【惊讶】", "【大笑】", "【伤心】", "【苦笑】"
+            "【微笑", "【惊讶", "【大笑", "【伤心", "【苦笑"
     };
+    /*
+     * private static final String[] mFeelingsCN = { "【微笑】", "【微笑表情】", "【惊讶】",
+     * " 【惊讶表情】", "【大笑】", " 【大笑表情】", "【伤心】", " 【伤心表情】", "【苦笑】", " 【苦笑表情】" };
+     */
     private static final String[] mFeelingsEN = {
             "smile", "surprise", "laugh", "sad", "awkward"
     };
 
     private static final String[] mActorCN = {
-            "蕾雅：", "克里斯特："
+            "蕾雅：", "克里斯特：", "高成全："
     };
     private static final String[] mActorEN = {
-            "leia", "crister"
+            "leia", "crister", "gao"
+    };
+
+    private static final String[] mActorFeeling = {
+            "", "", ""
     };
 
     private static List<String> mBeforeList = new ArrayList<String>();
     private static List<String> mAfterList = new ArrayList<String>();
-    private static String mMainActorFeeling = "";
-    private static String mNormalFeeling = "";
 
     public static void main(String[] args) {
         File file = null;
@@ -57,42 +63,45 @@ public class MainTextProcessing {
         System.out.println("------------------before------------------");
 
         for (String text : mBeforeList) {
-            
+
             System.out.println("------------------1------------------");
             if (text.contains("时间：")) {
                 mAfterList.add("#label day51:");
-            }
-            System.out.println("------------------2------------------");
-            if (text.contains("场景：")) {
+            } else if (text.contains("场景：")) {
                 System.out.println("------------------3------------------");
                 mAfterList.add("    #scene garden");
                 mAfterList.add("    #with fade");
                 mAfterList.add("    #play music \"music\\3.bgm.mp3\" fadein 1");
-                mAfterList.addAll(getActorFeeling("crister", ""));
-                mNormalFeeling = mFeelingsEN[0]; // smile is default feeling.
-            }
-
-            if (containFeeling(text)) {
+                for (int i = 1; i < mActorEN.length; i++) {
+                    mAfterList.addAll(getActorFeeling(mActorEN[i], ""));
+                }
+                for (int i = 1; i < mActorFeeling.length; i++) {
+                    mActorFeeling[i] = mFeelingsEN[0]; // smile is default
+                                                       // feeling.
+                }
+            } else if (containFeeling(text)) {
                 System.out.println("------------------4------------------");
                 String actor = getActor(text);
+                int index = getActorFeelingIndex(actor);
                 String feeling = getFeeling(text);
                 if (isMainActor(actor)) {
-                    if (mMainActorFeeling.equals("") || !feeling.equals(mMainActorFeeling)) {
-                        mMainActorFeeling = feeling;
-                        mAfterList.add("    $ emo = " + mMainActorFeeling);
+                    if (mActorFeeling[index].equals("") || !feeling.equals(mActorFeeling[index])) {
+                        mActorFeeling[index] = feeling;
+                        mAfterList.add("    $ emo = " + mActorFeeling[index]);
                     }
                 } else {
-                    if (!feeling.equals(mNormalFeeling)) {
-                        mNormalFeeling = feeling;
-                        mAfterList.addAll(getActorFeeling(actor, mNormalFeeling));
+                    if (!feeling.equals(mActorFeeling[index])) {
+                        mActorFeeling[index] = feeling;
+                        mAfterList.addAll(getActorFeeling(actor, mActorFeeling[index]));
                     }
                 }
 
                 String sayContent = getSayContent(text);
-                sayContent =  sayContent.replace("•", ".");
+                sayContent = sayContent.replace("•", "…");
                 mAfterList.add("    " + actor + " \"" + sayContent + "\"");
+            } else {
+                mAfterList.add("#" + text);
             }
-
         }
 
         System.out.println("------------------5-ssss-----------------");
@@ -108,6 +117,15 @@ public class MainTextProcessing {
             e.printStackTrace();
         }
 
+    }
+
+    private static int getActorFeelingIndex(String actor) {
+        for (int i = 0; i < mActorCN.length; i++) {
+            if (actor.equals(mActorEN[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static String formatDot(String text) {
