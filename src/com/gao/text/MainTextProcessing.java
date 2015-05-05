@@ -78,17 +78,19 @@ public class MainTextProcessing {
                     mActorFeeling[i] = mFeelingsEN[0]; // smile is default
                                                        // feeling.
                 }
+            } else if (text.startsWith("BGM") || text.startsWith("自动剧情") || text.startsWith("条件剧情")) {
+                mAfterList.add("#" + text);
             } else if (containFeeling(text)) {
                 String actor = getActor(text);
                 int index = getActorFeelingIndex(actor);
                 String feeling = getFeeling(text);
+                System.out.println("feeling: " + feeling + " text: " + text);
                 if (isMainActor(actor)) {
                     if (mActorFeeling[index].equals("") || !feeling.equals(mActorFeeling[index])) {
                         mActorFeeling[index] = feeling;
                         mAfterList.add("    $ emo = " + mActorFeeling[index]);
                     }
                 } else {
-                    System.out.println("feeling: " + feeling + " text: " + text);
                     if (!feeling.equals(mActorFeeling[index])) {
                         mActorFeeling[index] = feeling;
                         mAfterList.addAll(getActorFeeling(actor, mActorFeeling[index]));
@@ -98,6 +100,16 @@ public class MainTextProcessing {
                 String sayContent = getSayContent(text);
                 sayContent = sayContent.replace("•", "…");
                 mAfterList.add("    " + actor + " \"" + sayContent + "\"");
+            } else if (containPasserby(text)) {
+                System.out.println(" text: " + text);
+                Pattern pattern = Pattern.compile( "^\\w*:|：");
+                String[] results = pattern.split(text);
+                if (results.length == 2) {
+                    mAfterList.add("    \"" + results[0]  + "\" " + "\"" + results[1] + "\"");
+                } else {
+                    //致蕾雅：
+                    mAfterList.add("    \"" + results[0]  + "\" ");
+                }
             } else {
                 mAfterList.add("#" + text);
             }
@@ -114,6 +126,22 @@ public class MainTextProcessing {
 
     }
 
+    /**
+     * Contain passerby not actor
+     * 菲尔：呐，我才不怕！汉克也是，对吧？
+     * (4空格)"菲尔" "呐，我才不怕！汉克也是，对吧？"
+     * @param text
+     * @return
+     */
+    private static boolean containPasserby(String text) {
+        if (null == text || text.equals("")) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile( "^\\w*:|：");
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find();
+    }
+
     private static int getActorFeelingIndex(String actor) {
         for (int i = 0; i < mActorCN.length; i++) {
             if (actor.equals(mActorEN[i])) {
@@ -121,11 +149,6 @@ public class MainTextProcessing {
             }
         }
         return -1;
-    }
-
-    private static String formatDot(String text) {
-        text.replace("•", ".");
-        return text;
     }
 
     private static String getSayContent(String text) {
