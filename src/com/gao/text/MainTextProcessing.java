@@ -7,23 +7,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 
 public class MainTextProcessing {
     private static final String[] mFeelingsCN = {
-            "【微笑", "【惊讶", "【大笑", "【伤心", "【苦笑"
+            "【微笑", "【惊讶", "【大笑", "【伤心", "【苦笑", "【疑问", "【无奈", "【认真", "【流汗"
     };
     /*
      * private static final String[] mFeelingsCN = { "【微笑】", "【微笑表情】", "【惊讶】",
      * " 【惊讶表情】", "【大笑】", " 【大笑表情】", "【伤心】", " 【伤心表情】", "【苦笑】", " 【苦笑表情】" };
      */
     private static final String[] mFeelingsEN = {
-            "smile", "surprise", "laugh", "sad", "awkward"
+            "smile", "surprise", "laugh", "sad", "awkward", "doubt", "awkward", "serious", "sweat"
     };
 
     private static final String[] mActorCN = {
-            "蕾雅：", "克里斯特：", "高成全："
+            //"蕾雅：| 蕾雅•艾菲利斯： ", "克里斯特：", "高成全："
+            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "高成全"
     };
     private static final String[] mActorEN = {
             "leia", "crister", "gao"
@@ -60,18 +63,14 @@ public class MainTextProcessing {
         for (String text : mBeforeList) {
             System.out.println(text);
         }
-        System.out.println("------------------before------------------");
 
         for (String text : mBeforeList) {
 
-            System.out.println("------------------1------------------");
             if (text.contains("时间：")) {
-                mAfterList.add("#label day51:");
+                mAfterList.add("#label dayxx:");
             } else if (text.contains("场景：")) {
-                System.out.println("------------------3------------------");
                 mAfterList.add("    #scene garden");
                 mAfterList.add("    #with fade");
-                mAfterList.add("    #play music \"music\\3.bgm.mp3\" fadein 1");
                 for (int i = 1; i < mActorEN.length; i++) {
                     mAfterList.addAll(getActorFeeling(mActorEN[i], ""));
                 }
@@ -80,7 +79,6 @@ public class MainTextProcessing {
                                                        // feeling.
                 }
             } else if (containFeeling(text)) {
-                System.out.println("------------------4------------------");
                 String actor = getActor(text);
                 int index = getActorFeelingIndex(actor);
                 String feeling = getFeeling(text);
@@ -90,6 +88,7 @@ public class MainTextProcessing {
                         mAfterList.add("    $ emo = " + mActorFeeling[index]);
                     }
                 } else {
+                    System.out.println("feeling: " + feeling + " text: " + text);
                     if (!feeling.equals(mActorFeeling[index])) {
                         mActorFeeling[index] = feeling;
                         mAfterList.addAll(getActorFeeling(actor, mActorFeeling[index]));
@@ -104,16 +103,12 @@ public class MainTextProcessing {
             }
         }
 
-        System.out.println("------------------5-ssss-----------------");
         for (String text : mAfterList) {
-            System.out.println("------------------511------------------");
             System.out.println(text);
         }
         try {
-            System.out.println("------------------6------------------");
             fileUtils.writeLines(new File("D:\\after.txt"), mAfterList);
         } catch (IOException e) {
-            System.out.println("------------------7------------------");
             e.printStackTrace();
         }
 
@@ -140,8 +135,14 @@ public class MainTextProcessing {
 
     private static String getActor(String text) {
         for (int i = 0; i < mActorCN.length; i++) {
-            if (text.contains(mActorCN[i])) {
-                return mActorEN[i];
+            String actor = mActorCN[i];
+            String[] actorNames = actor.split("\\|");
+            for (int j = 0; j < actorNames.length; j++) {
+                Pattern pattern = Pattern.compile(actorNames[j] + "[\\s]*:|[\\s]*：");
+                Matcher matcher = pattern.matcher(text);
+                if (matcher.find()) {
+                    return mActorEN[i];
+                }
             }
         }
         return "";
