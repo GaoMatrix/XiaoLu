@@ -26,14 +26,14 @@ public class MainTextProcessing {
 
     private static final String[] mActorCN = {
             //"蕾雅：| 蕾雅•艾菲利斯： ", "克里斯特：", "高成全："
-            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "高成全"
+            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "高成全", "流"
     };
     private static final String[] mActorEN = {
-            "leia", "crister", "gao"
+            "leia", "crister", "gao", "liu"
     };
 
     private static final String[] mActorFeeling = {
-            "", "", ""
+            "", "", "", ""
     };
 
     private static List<String> mBeforeList = new ArrayList<String>();
@@ -78,13 +78,14 @@ public class MainTextProcessing {
                     mActorFeeling[i] = mFeelingsEN[0]; // smile is default
                                                        // feeling.
                 }
-            } else if (text.startsWith("BGM") || text.startsWith("自动剧情") || text.startsWith("条件剧情")) {
+            } else if (needComment(text)) {
+                System.out.println("needComment text: " + text);
                 mAfterList.add("#" + text);
             } else if (containFeeling(text)) {
+                System.out.println("containFeeling text: " + text);
                 String actor = getActor(text);
                 int index = getActorFeelingIndex(actor);
                 String feeling = getFeeling(text);
-                System.out.println("feeling: " + feeling + " text: " + text);
                 if (isMainActor(actor)) {
                     if (mActorFeeling[index].equals("") || !feeling.equals(mActorFeeling[index])) {
                         mActorFeeling[index] = feeling;
@@ -101,7 +102,7 @@ public class MainTextProcessing {
                 sayContent = sayContent.replace("•", "…");
                 mAfterList.add("    " + actor + " \"" + sayContent + "\"");
             } else if (containPasserby(text)) {
-                System.out.println(" text: " + text);
+                System.out.println("containPasserby  text: " + text);
                 Pattern pattern = Pattern.compile( "^\\w*:|：");
                 String[] results = pattern.split(text);
                 if (results.length == 2) {
@@ -126,6 +127,13 @@ public class MainTextProcessing {
 
     }
 
+    private static boolean needComment(String text) {
+        Pattern pattern = Pattern.compile("^选择[a-zA-Z](：|:)");
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find() || text.startsWith("BGM") || text.startsWith("自动剧情")
+                || text.startsWith("条件剧情") || text.startsWith("场景跳转至");
+    }
+
     /**
      * Contain passerby not actor
      * 菲尔：呐，我才不怕！汉克也是，对吧？
@@ -137,7 +145,7 @@ public class MainTextProcessing {
         if (null == text || text.equals("")) {
             return false;
         }
-        Pattern pattern = Pattern.compile( "^\\w*:|：");
+        Pattern pattern = Pattern.compile( "^(\\w|\\W)*(：|:)");
         Matcher matcher = pattern.matcher(text);
         return matcher.find();
     }
@@ -161,7 +169,7 @@ public class MainTextProcessing {
             String actor = mActorCN[i];
             String[] actorNames = actor.split("\\|");
             for (int j = 0; j < actorNames.length; j++) {
-                Pattern pattern = Pattern.compile(actorNames[j] + "[\\s]*:|[\\s]*：");
+                Pattern pattern = Pattern.compile(actorNames[j] + "([\\s]*:|[\\s]*：)");
                 Matcher matcher = pattern.matcher(text);
                 if (matcher.find()) {
                     return mActorEN[i];
