@@ -25,15 +25,14 @@ public class MainTextProcessing {
     };
 
     private static final String[] mActorCN = {
-            //"蕾雅：| 蕾雅•艾菲利斯： ", "克里斯特：", "高成全："
-            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "高成全", "流"
+            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "泽希", "流", "黎欧", "洛库", "纱利雅", "老板娘/杜娜", "杜娜"
     };
     private static final String[] mActorEN = {
-            "leia", "crister", "gao", "liu"
+            "leia", "crister", "jesse", "liu", "leo", "locke", "saria", "saria", "saria"
     };
 
     private static final String[] mActorFeeling = {
-            "", "", "", ""
+            "", "", "", "", "", "", "", "", ""
     };
 
     private static List<String> mBeforeList = new ArrayList<String>();
@@ -66,11 +65,13 @@ public class MainTextProcessing {
 
         for (String text : mBeforeList) {
 
+            text = handleDot(text);
+
             if (text.contains("时间：")) {
                 mAfterList.add("#label dayxx:");
             } else if (text.contains("场景：")) {
-                mAfterList.add("    #scene garden");
-                mAfterList.add("    #with fade");
+                mAfterList.add("#scene garden");
+                mAfterList.add("#with fade");
                 for (int i = 1; i < mActorEN.length; i++) {
                     mAfterList.addAll(getActorFeeling(mActorEN[i], ""));
                 }
@@ -99,7 +100,6 @@ public class MainTextProcessing {
                 }
 
                 String sayContent = getSayContent(text);
-                sayContent = sayContent.replace("•", "…");
                 mAfterList.add("    " + actor + " \"" + sayContent + "\"");
             } else if (containPasserby(text)) {
                 System.out.println("containPasserby  text: " + text);
@@ -125,6 +125,16 @@ public class MainTextProcessing {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 
+     * @param text
+     * @return
+     */
+    private static String handleDot(String text) {
+        
+        return null;
     }
 
     private static boolean needComment(String text) {
