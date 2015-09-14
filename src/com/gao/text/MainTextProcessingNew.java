@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,26 +14,152 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 
 public class MainTextProcessingNew {
-    private static final String[] mFeelingsCN = {
-            "【微笑", "【惊讶", "【大笑", "【伤心", "【苦笑", "【疑问", "【无奈", "【认真", "【流汗"
-    };
-    /*
-     * private static final String[] mFeelingsCN = { "【微笑】", "【微笑表情】", "【惊讶】",
-     * " 【惊讶表情】", "【大笑】", " 【大笑表情】", "【伤心】", " 【伤心表情】", "【苦笑】", " 【苦笑表情】" };
-     */
-    private static final String[] mFeelingsEN = {
-            "smile", "surprise", "laugh", "sad", "awkward", "doubt", "awkward", "serious", "sweat"
-    };
+    static {
+        HashMap<String, String> mLeiaFaceMap = new HashMap<String, String>();
+        mLeiaFaceMap.put("正常", "$ emo = leiabase");
+        mLeiaFaceMap.put("吐槽", "$ emo = sarcasm");
+        mLeiaFaceMap.put("大笑", "$ emo = laugh");
+        mLeiaFaceMap.put("伤心", "$ emo = sad");
+        mLeiaFaceMap.put("大哭", "$ emo = cry");
+        mLeiaFaceMap.put("惊恐", "$ emo = shock");
+        mLeiaFaceMap.put("无奈", "$ emo = awkward");
+        mLeiaFaceMap.put("害羞", "$ emo = shy");
+        mLeiaFaceMap.put("流汗", "$ emo = sweat");
+        mLeiaFaceMap.put("疑问", "$ emo = doubt");
+        mLeiaFaceMap.put("惊讶", "$ emo = surprise");
+
+        HashMap<String, String> mLockeFaceMap = new HashMap<String, String>();
+        mLockeFaceMap.put("正常", "show locke");
+        mLockeFaceMap.put("大笑1", "show locke laugh");
+        mLockeFaceMap.put("大笑2", "show locke laugh2");
+        mLockeFaceMap.put("腹黑1", "show locke scheming");
+        mLockeFaceMap.put("腹黑2", "show locke scheming2");
+        mLockeFaceMap.put("惊讶", "show locke surprise");
+        mLockeFaceMap.put("无奈", "show locke awkward");
+        mLockeFaceMap.put("认真", "show locke serious");
+        mLockeFaceMap.put("伤心", "show locke sad");
+        mLockeFaceMap.put("生气", "show locke angry");
+
+        HashMap<String, String> mChristFaceMap = new HashMap<String, String>();
+        mChristFaceMap.put("正常", "show christ");
+        mChristFaceMap.put("无奈", "show christ awkward");
+        mChristFaceMap.put("惊讶", "show christ surprise");
+        mChristFaceMap.put("生气", "show christ angry");
+        mChristFaceMap.put("伤心", "show christ sad");
+        mChristFaceMap.put("认真", "show christ serious");
+        mChristFaceMap.put("大笑", "show christ laugh");
+        
+        HashMap<String, String> mChrist2FaceMap = new HashMap<String, String>();
+        mChrist2FaceMap.put("正常", "show christ2");
+        mChrist2FaceMap.put("无奈", "show christ awkward2");
+        mChrist2FaceMap.put("惊讶", "show christ surprise2");
+        mChrist2FaceMap.put("生气", "show christ angry2");
+        mChrist2FaceMap.put("伤心", "show christ sad2");
+        mChrist2FaceMap.put("认真", "show christ serious2");
+        mChrist2FaceMap.put("大笑", "show christ laugh2");
+
+        HashMap<String, String> mLeoFaceMap = new HashMap<String, String>();
+        mLeoFaceMap.put("正常", "show locke");
+        mLeoFaceMap.put("无奈", "show locke awkward");
+        mLeoFaceMap.put("大笑1", "show locke laugh");
+        mLeoFaceMap.put("大笑2", "show locke laugh2");
+        mLeoFaceMap.put("惊讶", "show locke surprise");
+        mLeoFaceMap.put("认真", "show locke serious");
+        mLeoFaceMap.put("生气", "show locke angry");
+
+        HashMap<String, String> mJesseFaceMap = new HashMap<String, String>();
+        mJesseFaceMap.put("正常", "show jesse");
+        mJesseFaceMap.put("疑问", "show jesse doubt");
+        mJesseFaceMap.put("微笑", "show jesse smile");
+        mJesseFaceMap.put("害羞", "show jesse shy");
+        mJesseFaceMap.put("闭眼", "show jesse closeeyes");
+        mJesseFaceMap.put("惊讶", "show jesse surprise");
+        mJesseFaceMap.put("生气", "show jesse angry");
+        
+        HashMap<String, String> mJesse2FaceMap = new HashMap<String, String>();
+        mJesse2FaceMap.put("正常", "show jesse2");
+        mJesse2FaceMap.put("疑问", "show jesse doubt2");
+        mJesse2FaceMap.put("微笑", "show jesse smile2");
+        mJesse2FaceMap.put("害羞", "show jesse shy2");
+        mJesse2FaceMap.put("闭眼", "show jesse closeeyes2");
+        mJesse2FaceMap.put("惊讶", "show jesse surprise2");
+        mJesse2FaceMap.put("生气", "show jesse angry2");
+        
+        // FIXME 
+        // 泽希3      show jesse 3
+
+
+        HashMap<String, String> mAlisonFaceMap = new HashMap<String, String>();
+        mAlisonFaceMap.put("正常/微笑", "show alison");
+        mAlisonFaceMap.put("生气", "show alison angry");
+        mAlisonFaceMap.put("大笑", "show alison laugh");
+        mAlisonFaceMap.put("惊讶", "show alison surprise");
+
+        HashMap<String, String> mDinaFaceMap = new HashMap<String, String>();
+        mDinaFaceMap.put("正常/微笑", "show dina");
+        mDinaFaceMap.put("大笑", "show dina laugh");
+
+        HashMap<String, String> mSophieFaceMap = new HashMap<String, String>();
+        mSophieFaceMap.put("正常/微笑", "show sophie");
+        mSophieFaceMap.put("大笑", "show sophie laugh");
+
+        HashMap<String, String> mJudeFaceMap = new HashMap<String, String>();
+        mJudeFaceMap.put("正常/微笑", "show jude");
+        mJudeFaceMap.put("大笑", "show jude smile");
+        mJudeFaceMap.put("奸笑", "show jude laugh");
+        mJudeFaceMap.put("狂笑", "show jude sinister");
+        mJudeFaceMap.put("鄙视", "show jude despise");
+        mJudeFaceMap.put("面瘫/认真", "show jude serious");
+        mJudeFaceMap.put("凶恶", "show jude viciously");
+        mJudeFaceMap.put("凶恶2", "show jude viciously2");
+
+        HashMap<String, String> mKiluFaceMap = new HashMap<String, String>();
+        mKiluFaceMap.put("正常", "show kilu");
+        mKiluFaceMap.put("笑1", "show kilu laugh");
+        mKiluFaceMap.put("笑2", "shou kilu laugh2");
+        mKiluFaceMap.put("担忧", "show kilu care");
+        
+        HashMap<String, String> mSceneMap = new HashMap<String, String>();
+        mSceneMap.put("教室", "scene classroom");
+        mSceneMap.put("宿舍早", "scene dormitory");
+        mSceneMap.put("宿舍深夜", "scene dormitory3");
+        mSceneMap.put("宿舍晚", "scene dormitory2");
+        mSceneMap.put("豪宅", "scene mansion");
+        mSceneMap.put("教堂", "scene church");
+        mSceneMap.put("顶楼", "scene top");
+        mSceneMap.put("水底", "scene lake");
+        mSceneMap.put("领地傍晚", "scene altar2");
+        mSceneMap.put("领地早", "scene altar");
+        mSceneMap.put("教堂后院", "scene church2");
+        mSceneMap.put("教堂回廊", "scene church3");
+        mSceneMap.put("咖啡屋", "scene cafe");
+        mSceneMap.put("摩天轮内早", "scene fwheel");
+        mSceneMap.put("摩天轮内晚", "scene fwheel2");
+        mSceneMap.put("魔法屋", "scene magichouse");
+        mSceneMap.put("墓园", "scene cemetery");
+        mSceneMap.put("琴房", "scene pianoroom");
+        mSceneMap.put("实验室", "scene lab");
+        mSceneMap.put("图书馆", "scene library");
+        mSceneMap.put("舞会", "scene hall");
+        mSceneMap.put("小黑屋", "scene darkhouse");
+        mSceneMap.put("校内花园早", "scene garden");
+        mSceneMap.put("校内花园晚", "scene garden2");
+        mSceneMap.put("地下室", "scene basement");
+        mSceneMap.put("学校正门", "scene gate");
+        mSceneMap.put("学生会", "scene office");
+        mSceneMap.put("医疗室", "scene infirmary");
+        mSceneMap.put("游乐园早", "scene apark");
+        mSceneMap.put("游乐园晚", "scene apark2");
+        mSceneMap.put("杂货店", "scene shop");
+        mSceneMap.put("中心公园", "scene cpark");
+        mSceneMap.put("中心公园晚", "scene cpark2");
+    }
 
     private static final String[] mActorCN = {
-            "蕾雅|蕾雅•艾菲利斯", "克里斯特", "泽希", "流", "黎欧", "洛库", "纱利雅", "老板娘/杜娜", "杜娜"
+            "蕾雅", "洛库", "克里斯特", "黎欧", "泽希", "艾莉森", "杜娜", "纱妃", "教皇/裘德", "奇路"
     };
     private static final String[] mActorEN = {
-            "leia", "crister", "jesse", "liu", "leo", "locke", "saria", "saria", "saria"
-    };
-
-    private static final String[] mActorFeeling = {
-            "", "", "", "", "", "", "", "", ""
+            "leia", "locke", "christ", "leo", "jesse", "alison", "dina", "sophie", "jude", "kilu"
     };
 
     private static List<String> mBeforeList = new ArrayList<String>();
