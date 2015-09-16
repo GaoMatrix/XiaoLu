@@ -164,6 +164,7 @@ public class MainTextProcessingNew {
 
     private static List<String> mBeforeList = new ArrayList<String>();
     private static List<String> mAfterList = new ArrayList<String>();
+    private static FileUtils mFileUtils = new FileUtils();
 
     public static void main(String[] args) {
         File file = null;
@@ -180,20 +181,25 @@ public class MainTextProcessingNew {
         if (file == null) {
             return;
         }
-        FileUtils fileUtils = new FileUtils();
         try {
-            mBeforeList = fileUtils.readLines(file, "utf-8");
+            mBeforeList = mFileUtils.readLines(file, "utf-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
         for (String text : mBeforeList) {
             System.out.println(text);
         }
-
         for (String text : mBeforeList) {
+            if (text.startsWith("时间：")) {
+                String decodeText = decodeTime(text);
+                if (null != decodeText) {
+                    mAfterList.add(decodeText);
+                }
+            }
+            
+            /*
 
-            text = handleDot(text);
-
+            
             if (text.contains("时间：")) {
                 mAfterList.add("#label dayxx:");
             } else if (text.contains("场景：")) {
@@ -201,10 +207,6 @@ public class MainTextProcessingNew {
                 mAfterList.add("#with fade");
                 for (int i = 1; i < mActorEN.length; i++) {
                     mAfterList.addAll(getActorFeeling(mActorEN[i], ""));
-                }
-                for (int i = 1; i < mActorFeeling.length; i++) {
-                    mActorFeeling[i] = mFeelingsEN[0]; // smile is default
-                                                       // feeling.
                 }
             } else if (needComment(text)) {
                 System.out.println("needComment text: " + text);
@@ -214,17 +216,6 @@ public class MainTextProcessingNew {
                 String actor = getActor(text);
                 int index = getActorFeelingIndex(actor);
                 String feeling = getFeeling(text);
-                if (isMainActor(actor)) {
-                    if (mActorFeeling[index].equals("") || !feeling.equals(mActorFeeling[index])) {
-                        mActorFeeling[index] = feeling;
-                        mAfterList.add("    $ emo = " + mActorFeeling[index]);
-                    }
-                } else {
-                    if (!feeling.equals(mActorFeeling[index])) {
-                        mActorFeeling[index] = feeling;
-                        mAfterList.addAll(getActorFeeling(actor, mActorFeeling[index]));
-                    }
-                }
 
                 String sayContent = getSayContent(text);
                 mAfterList.add("    " + actor + " \"" + sayContent + "\"");
@@ -241,28 +232,64 @@ public class MainTextProcessingNew {
             } else {
                 mAfterList.add("#" + text);
             }
-        }
+        */}
 
         for (String text : mAfterList) {
             System.out.println(text);
         }
         try {
-            fileUtils.writeLines(new File("D:\\after.txt"), mAfterList);
+            mFileUtils.writeLines(new File("D:\\after.txt"), mAfterList);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+
     /**
-     * 
+     * 解析日期  时间：8月1日
      * @param text
-     * @return
      */
-    private static String handleDot(String text) {
-        
-        return null;
+    private static String decodeTime(String text) {
+        System.out.println("text: " + text);
+        if (null == text || text.equals("")) {
+            return null;
+        }
+        String time = text.split("：")[1];
+        System.out.println("time: " + time);
+        int monthPos = time.indexOf("月");
+        int dayPos = time.indexOf("日");
+        String month = time.substring(0, monthPos);
+        String day = time.substring(monthPos + 1, dayPos);
+        int monthInt = Integer.parseInt(month);
+        int dayInt = Integer.parseInt(day);
+        System.out.println("monthInt: " + monthInt);
+        System.out.println("dayInt: " + dayInt);
+        StringBuilder builder = new StringBuilder("label day");
+        switch (monthInt) {
+            case 8:
+                builder.append(day);
+                break;
+            case 9:
+                builder.append(31 + dayInt);
+                break;
+            case 10:
+                builder.append(61 + dayInt);
+                break;
+            case 11:
+                builder.append(92 + dayInt);
+                break;
+            case 12:
+                builder.append(122 + day);
+                break;
+            default:
+                break;
+        }
+        builder.append(":");
+        builder.append("#" + time);
+        return builder.toString();
     }
+
 
     private static boolean needComment(String text) {
         Pattern pattern = Pattern.compile("^选择[a-zA-Z](：|:)");
@@ -316,26 +343,8 @@ public class MainTextProcessingNew {
         return "";
     }
 
-    private static boolean containFeeling(String text) {
-        for (int i = 0; i < mFeelingsCN.length; i++) {
-            if (text.contains(mFeelingsCN[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private static boolean isMainActor(String text) {
         return text.contains(mActorEN[0]);
-    }
-
-    private static String getFeeling(String text) {
-        for (int i = 0; i < mFeelingsCN.length; i++) {
-            if (text.contains(mFeelingsCN[i])) {
-                return mFeelingsEN[i];
-            }
-        }
-        return "";
     }
 
     /**
