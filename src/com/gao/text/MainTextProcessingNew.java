@@ -2,6 +2,7 @@
 package com.gao.text;
 
 import org.apache.commons.io.FileUtils;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +14,23 @@ import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 
+import jdk.internal.dynalink.beans.StaticClass;
+
 public class MainTextProcessingNew {
+    static HashMap<String, String> mLeiaFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mLockeFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mChristFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mChrist2FaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mLeoFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mJesseFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mJesse2FaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mAlisonFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mDinaFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mSophieFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mJudeFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mKiluFaceMap = new HashMap<String, String>();
+    static HashMap<String, String> mSceneMap = new HashMap<String, String>();
     static {
-        HashMap<String, String> mLeiaFaceMap = new HashMap<String, String>();
         mLeiaFaceMap.put("正常", "$ emo = leiabase");
         mLeiaFaceMap.put("吐槽", "$ emo = sarcasm");
         mLeiaFaceMap.put("大笑", "$ emo = laugh");
@@ -28,7 +43,6 @@ public class MainTextProcessingNew {
         mLeiaFaceMap.put("疑问", "$ emo = doubt");
         mLeiaFaceMap.put("惊讶", "$ emo = surprise");
 
-        HashMap<String, String> mLockeFaceMap = new HashMap<String, String>();
         mLockeFaceMap.put("正常", "show locke");
         mLockeFaceMap.put("大笑1", "show locke laugh");
         mLockeFaceMap.put("大笑2", "show locke laugh2");
@@ -40,7 +54,6 @@ public class MainTextProcessingNew {
         mLockeFaceMap.put("伤心", "show locke sad");
         mLockeFaceMap.put("生气", "show locke angry");
 
-        HashMap<String, String> mChristFaceMap = new HashMap<String, String>();
         mChristFaceMap.put("正常", "show christ");
         mChristFaceMap.put("无奈", "show christ awkward");
         mChristFaceMap.put("惊讶", "show christ surprise");
@@ -48,8 +61,7 @@ public class MainTextProcessingNew {
         mChristFaceMap.put("伤心", "show christ sad");
         mChristFaceMap.put("认真", "show christ serious");
         mChristFaceMap.put("大笑", "show christ laugh");
-        
-        HashMap<String, String> mChrist2FaceMap = new HashMap<String, String>();
+
         mChrist2FaceMap.put("正常", "show christ2");
         mChrist2FaceMap.put("无奈", "show christ awkward2");
         mChrist2FaceMap.put("惊讶", "show christ surprise2");
@@ -58,7 +70,6 @@ public class MainTextProcessingNew {
         mChrist2FaceMap.put("认真", "show christ serious2");
         mChrist2FaceMap.put("大笑", "show christ laugh2");
 
-        HashMap<String, String> mLeoFaceMap = new HashMap<String, String>();
         mLeoFaceMap.put("正常", "show locke");
         mLeoFaceMap.put("无奈", "show locke awkward");
         mLeoFaceMap.put("大笑1", "show locke laugh");
@@ -67,7 +78,6 @@ public class MainTextProcessingNew {
         mLeoFaceMap.put("认真", "show locke serious");
         mLeoFaceMap.put("生气", "show locke angry");
 
-        HashMap<String, String> mJesseFaceMap = new HashMap<String, String>();
         mJesseFaceMap.put("正常", "show jesse");
         mJesseFaceMap.put("疑问", "show jesse doubt");
         mJesseFaceMap.put("微笑", "show jesse smile");
@@ -75,8 +85,7 @@ public class MainTextProcessingNew {
         mJesseFaceMap.put("闭眼", "show jesse closeeyes");
         mJesseFaceMap.put("惊讶", "show jesse surprise");
         mJesseFaceMap.put("生气", "show jesse angry");
-        
-        HashMap<String, String> mJesse2FaceMap = new HashMap<String, String>();
+
         mJesse2FaceMap.put("正常", "show jesse2");
         mJesse2FaceMap.put("疑问", "show jesse doubt2");
         mJesse2FaceMap.put("微笑", "show jesse smile2");
@@ -84,26 +93,21 @@ public class MainTextProcessingNew {
         mJesse2FaceMap.put("闭眼", "show jesse closeeyes2");
         mJesse2FaceMap.put("惊讶", "show jesse surprise2");
         mJesse2FaceMap.put("生气", "show jesse angry2");
-        
-        // FIXME 
-        // 泽希3      show jesse 3
 
+        // FIXME
+        // 泽希3 show jesse 3
 
-        HashMap<String, String> mAlisonFaceMap = new HashMap<String, String>();
         mAlisonFaceMap.put("正常/微笑", "show alison");
         mAlisonFaceMap.put("生气", "show alison angry");
         mAlisonFaceMap.put("大笑", "show alison laugh");
         mAlisonFaceMap.put("惊讶", "show alison surprise");
 
-        HashMap<String, String> mDinaFaceMap = new HashMap<String, String>();
         mDinaFaceMap.put("正常/微笑", "show dina");
         mDinaFaceMap.put("大笑", "show dina laugh");
 
-        HashMap<String, String> mSophieFaceMap = new HashMap<String, String>();
         mSophieFaceMap.put("正常/微笑", "show sophie");
         mSophieFaceMap.put("大笑", "show sophie laugh");
 
-        HashMap<String, String> mJudeFaceMap = new HashMap<String, String>();
         mJudeFaceMap.put("正常/微笑", "show jude");
         mJudeFaceMap.put("大笑", "show jude smile");
         mJudeFaceMap.put("奸笑", "show jude laugh");
@@ -113,13 +117,11 @@ public class MainTextProcessingNew {
         mJudeFaceMap.put("凶恶", "show jude viciously");
         mJudeFaceMap.put("凶恶2", "show jude viciously2");
 
-        HashMap<String, String> mKiluFaceMap = new HashMap<String, String>();
         mKiluFaceMap.put("正常", "show kilu");
         mKiluFaceMap.put("笑1", "show kilu laugh");
         mKiluFaceMap.put("笑2", "shou kilu laugh2");
         mKiluFaceMap.put("担忧", "show kilu care");
-        
-        HashMap<String, String> mSceneMap = new HashMap<String, String>();
+
         mSceneMap.put("教室", "scene classroom");
         mSceneMap.put("宿舍早", "scene dormitory");
         mSceneMap.put("宿舍深夜", "scene dormitory3");
@@ -161,6 +163,7 @@ public class MainTextProcessingNew {
     private static final String[] mActorEN = {
             "leia", "locke", "christ", "leo", "jesse", "alison", "dina", "sophie", "jude", "kilu"
     };
+    private static final String SCENE_ENDING = "with fade";
 
     private static List<String> mBeforeList = new ArrayList<String>();
     private static List<String> mAfterList = new ArrayList<String>();
@@ -190,13 +193,22 @@ public class MainTextProcessingNew {
             System.out.println(text);
         }
         for (String text : mBeforeList) {
+
+            // 处理时间
             if (text.startsWith("时间：")) {
                 String decodeText = decodeTime(text);
                 if (null != decodeText) {
                     mAfterList.add(decodeText);
                 }
             }
-            
+
+            // 场景处理
+            if (text.startsWith("○")) {
+                String scene = text.substring(1);
+                mAfterList.add(mSceneMap.get(scene));
+                mAfterList.add(SCENE_ENDING);
+            }
+
             /*
 
             
@@ -234,6 +246,7 @@ public class MainTextProcessingNew {
             }
         */}
 
+        System.out.println("-------------------------------------------------------------------");
         for (String text : mAfterList) {
             System.out.println(text);
         }
