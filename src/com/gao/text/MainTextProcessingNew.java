@@ -30,6 +30,7 @@ public class MainTextProcessingNew {
     static HashMap<String, String> mJudeFaceMap = new HashMap<String, String>();
     static HashMap<String, String> mKiluFaceMap = new HashMap<String, String>();
     static HashMap<String, String> mSceneMap = new HashMap<String, String>();
+    static HashMap<String, String> mActorMap = new HashMap<String, String>();
     static {
         mLeiaFaceMap.put("正常", "$ emo = leiabase");
         mLeiaFaceMap.put("吐槽", "$ emo = sarcasm");
@@ -97,7 +98,8 @@ public class MainTextProcessingNew {
         // FIXME
         // 泽希3 show jesse 3
 
-        mAlisonFaceMap.put("正常/微笑", "show alison");
+        mAlisonFaceMap.put("正常", "show alison");
+        mAlisonFaceMap.put("微笑", "show alison");
         mAlisonFaceMap.put("生气", "show alison angry");
         mAlisonFaceMap.put("大笑", "show alison laugh");
         mAlisonFaceMap.put("惊讶", "show alison surprise");
@@ -155,6 +157,17 @@ public class MainTextProcessingNew {
         mSceneMap.put("杂货店", "scene shop");
         mSceneMap.put("中心公园", "scene cpark");
         mSceneMap.put("中心公园晚", "scene cpark2");
+
+        mActorMap.put("蕾雅", "leia");
+        mActorMap.put("洛库", "locke");
+        mActorMap.put("克里斯特", "christ");
+        mActorMap.put("黎欧", "leo");
+        mActorMap.put("泽希", "jesse");
+        mActorMap.put("艾莉森", "alison");
+        mActorMap.put("杜娜", "dina");
+        mActorMap.put("纱妃", "sophie");
+        mActorMap.put("教皇/裘德", "jude");
+        mActorMap.put("奇路", "kilu");
     }
 
     private static final String[] mActorCN = {
@@ -163,6 +176,7 @@ public class MainTextProcessingNew {
     private static final String[] mActorEN = {
             "leia", "locke", "christ", "leo", "jesse", "alison", "dina", "sophie", "jude", "kilu"
     };
+
     private static final String SCENE_ENDING = "with fade";
 
     private static List<String> mBeforeList = new ArrayList<String>();
@@ -192,7 +206,9 @@ public class MainTextProcessingNew {
         for (String text : mBeforeList) {
             System.out.println(text);
         }
-        for (String text : mBeforeList) {
+
+        for (int i = 0; i < mBeforeList.size(); i++) {
+            String text = mBeforeList.get(i);
 
             // 处理时间
             if (text.startsWith("时间：")) {
@@ -209,6 +225,53 @@ public class MainTextProcessingNew {
                 mAfterList.add(SCENE_ENDING);
             }
 
+            // 对话处理
+            if (text.startsWith("@")) {
+                String nextText = mBeforeList.get(i + 1);
+                try {
+                    System.out.println(text);
+                    System.out.println(nextText);
+                    String face = text.substring(1);
+                    String dialogue = nextText.split("#：")[1];
+                    if (nextText.startsWith("#蕾雅#")) {
+                        mAfterList.add(mLeiaFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("蕾雅") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#洛库#")) {
+                        mAfterList.add(mLockeFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("洛库") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#克里斯特#")) {
+                        mAfterList.add(mChristFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#黎欧#")) {
+                        mAfterList.add(mLeoFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("黎欧") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#泽希#")) {
+                        mAfterList.add(mJesseFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("泽希") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#艾莉森#")) {
+                        mAfterList.add(mAlisonFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("艾莉森") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#杜娜#")) {
+                        mAfterList.add(mDinaFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("杜娜") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#纱妃#")) {
+                        mAfterList.add(mSophieFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("纱妃") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#教皇/裘德#")) {
+                        mAfterList.add(mJudeFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("教皇/裘德") + " \"" + dialogue + "\"");
+                    } else if (nextText.startsWith("#奇路#")) {
+                        mAfterList.add(mKiluFaceMap.get(face));
+                        mAfterList.add(mActorMap.get("奇路") + " \"" + dialogue + "\"");
+                    }
+                    i++; // 处理两行
+                } catch (Exception e) {
+                    // 异常的处理，以#注释掉连续的两句
+                    mAfterList.add("#" + text);
+                    mAfterList.add("#" + nextText);
+                    i++;
+                }
+            }
             /*
 
             
