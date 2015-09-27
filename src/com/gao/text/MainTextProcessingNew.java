@@ -2,7 +2,6 @@
 package com.gao.text;
 
 import org.apache.commons.io.FileUtils;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,22 +13,34 @@ import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 
-import jdk.internal.dynalink.beans.StaticClass;
-
 public class MainTextProcessingNew {
+    /**蕾雅*/
     static HashMap<String, String> mLeiaFaceMap = new HashMap<String, String>();
+    /**洛库*/
     static HashMap<String, String> mLockeFaceMap = new HashMap<String, String>();
+    /**克里斯特*/
     static HashMap<String, String> mChristFaceMap = new HashMap<String, String>();
+    /**克里斯特2*/
     static HashMap<String, String> mChrist2FaceMap = new HashMap<String, String>();
+    /**黎欧*/
     static HashMap<String, String> mLeoFaceMap = new HashMap<String, String>();
+    /**泽希*/
     static HashMap<String, String> mJesseFaceMap = new HashMap<String, String>();
+    /**泽希2*/
     static HashMap<String, String> mJesse2FaceMap = new HashMap<String, String>();
+    /**艾莉森*/
     static HashMap<String, String> mAlisonFaceMap = new HashMap<String, String>();
+    /**杜娜*/
     static HashMap<String, String> mDinaFaceMap = new HashMap<String, String>();
+    /**纱妃*/
     static HashMap<String, String> mSophieFaceMap = new HashMap<String, String>();
+    /**教皇/裘德*/
     static HashMap<String, String> mJudeFaceMap = new HashMap<String, String>();
+    /**奇路*/
     static HashMap<String, String> mKiluFaceMap = new HashMap<String, String>();
+    /**场景中英文对照*/
     static HashMap<String, String> mSceneMap = new HashMap<String, String>();
+    /**演员中英文对照*/
     static HashMap<String, String> mActorMap = new HashMap<String, String>();
     static {
         mLeiaFaceMap.put("正常", "$ emo = leiabase");
@@ -104,18 +115,22 @@ public class MainTextProcessingNew {
         mAlisonFaceMap.put("大笑", "show alison laugh");
         mAlisonFaceMap.put("惊讶", "show alison surprise");
 
-        mDinaFaceMap.put("正常/微笑", "show dina");
+        mDinaFaceMap.put("正常", "show dina");
+        mDinaFaceMap.put("微笑", "show dina");
         mDinaFaceMap.put("大笑", "show dina laugh");
 
-        mSophieFaceMap.put("正常/微笑", "show sophie");
+        mSophieFaceMap.put("正常", "show sophie");
+        mSophieFaceMap.put("微笑", "show sophie");
         mSophieFaceMap.put("大笑", "show sophie laugh");
 
-        mJudeFaceMap.put("正常/微笑", "show jude");
+        mJudeFaceMap.put("正常", "show jude");
+        mJudeFaceMap.put("微笑", "show jude");
         mJudeFaceMap.put("大笑", "show jude smile");
         mJudeFaceMap.put("奸笑", "show jude laugh");
         mJudeFaceMap.put("狂笑", "show jude sinister");
         mJudeFaceMap.put("鄙视", "show jude despise");
-        mJudeFaceMap.put("面瘫/认真", "show jude serious");
+        mJudeFaceMap.put("面瘫", "show jude serious");
+        mJudeFaceMap.put("认真", "show jude serious");
         mJudeFaceMap.put("凶恶", "show jude viciously");
         mJudeFaceMap.put("凶恶2", "show jude viciously2");
 
@@ -166,7 +181,8 @@ public class MainTextProcessingNew {
         mActorMap.put("艾莉森", "alison");
         mActorMap.put("杜娜", "dina");
         mActorMap.put("纱妃", "sophie");
-        mActorMap.put("教皇/裘德", "jude");
+        mActorMap.put("教皇", "jude");
+        mActorMap.put("裘德", "jude");
         mActorMap.put("奇路", "kilu");
     }
 
@@ -259,9 +275,9 @@ public class MainTextProcessingNew {
                     } else if (nextText.startsWith("#纱妃#")) {
                         mAfterList.add(mSophieFaceMap.get(face));
                         mAfterList.add(mActorMap.get("纱妃") + " \"" + dialogue + "\"");
-                    } else if (nextText.startsWith("#教皇/裘德#")) {
+                    } else if (nextText.startsWith("#教皇#") || nextText.startsWith("#裘德#")) {
                         mAfterList.add(mJudeFaceMap.get(face));
-                        mAfterList.add(mActorMap.get("教皇/裘德") + " \"" + dialogue + "\"");
+                        mAfterList.add(mActorMap.get("教皇") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#奇路#")) {
                         mAfterList.add(mKiluFaceMap.get(face));
                         mAfterList.add(mActorMap.get("奇路") + " \"" + dialogue + "\"");
