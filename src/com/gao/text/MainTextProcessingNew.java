@@ -216,6 +216,7 @@ public class MainTextProcessingNew {
                 if (null != decodeText) {
                     mAfterList.add(decodeText);
                 }
+                continue;
             }
 
             // 场景处理
@@ -223,6 +224,7 @@ public class MainTextProcessingNew {
                 String scene = text.substring(1);
                 mAfterList.add(mSceneMap.get(scene));
                 mAfterList.add(SCENE_ENDING);
+                continue;
             }
 
             // 对话处理
@@ -271,7 +273,21 @@ public class MainTextProcessingNew {
                     mAfterList.add("#" + nextText);
                     i++;
                 }
+                continue;
             }
+
+            // 特殊对话处理
+            if (isSpecialDialogue(text)) {
+                // #后勤部学姐#：你好
+                // "后勤部学姐" "你好
+                int index = text.indexOf("#：");
+                String dialogue = text.substring(index + 2);
+                String actor = text.substring(1, index);
+                mAfterList.add("\"" + actor + "\"" + " : " + dialogue);
+                continue;
+            }
+            // 未知情况，暂时都以#进行注释
+            mAfterList.add("#" + text);
             /*
 
             
@@ -319,6 +335,21 @@ public class MainTextProcessingNew {
             e.printStackTrace();
         }
 
+    }
+
+
+    /**
+     * 没有表情的特殊对话，路人甲的对话
+     * @param text
+     * @return
+     */
+    private static boolean isSpecialDialogue(String text) {
+        if (null == text || text.length() ==0) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("^#.*#：.*");
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find();
     }
 
 
