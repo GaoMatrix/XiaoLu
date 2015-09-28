@@ -205,6 +205,7 @@ public class MainTextProcessingNew {
     private static List<String> mBeforeList = new ArrayList<String>();
     private static List<String> mAfterList = new ArrayList<String>();
     private static FileUtils mFileUtils = new FileUtils();
+    private static HashMap<String, String> mActorFaceMap = new HashMap<String, String>();
 
     public static void main(String[] args) {
         File file = null;
@@ -262,8 +263,13 @@ public class MainTextProcessingNew {
             // 场景处理
             if (text.startsWith("○")) {
                 String scene = text.substring(1);
-                mAfterList.add(FOUR_SPACE + mSceneMap.get(scene));
-                mAfterList.add(FOUR_SPACE + SCENE_ENDING);
+                String sceneEn = mSceneMap.get(scene);
+                if (null == sceneEn || sceneEn.length() == 0) {
+                    mAfterList.add(FOUR_SPACE +  "#" + text);
+                } else {
+                    mAfterList.add(FOUR_SPACE + mSceneMap.get(scene));
+                    mAfterList.add(FOUR_SPACE + SCENE_ENDING);
+                }
                 continue;
             }
 
@@ -277,43 +283,119 @@ public class MainTextProcessingNew {
                     String face = text.substring(index + 1);
                     String dialogue = nextText.split("#：|#:")[1];
                     if (nextText.startsWith("#蕾雅#")) {
-                        mAfterList.add(FOUR_SPACE + mLeiaFaceMap.get(face));
+                        String lastFace = mActorFaceMap.get("蕾雅");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mLeiaFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mLeiaFaceMap.get(face));
+                            mActorFaceMap.put("蕾雅", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("蕾雅") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#洛库#")) {
-                        mAfterList.add(FOUR_SPACE + mLockeFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("洛库");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mLockeFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mLockeFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("洛库", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("洛库") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#克里斯特#")) {
-                        mAfterList.add(FOUR_SPACE + mChristFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("克里斯特");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mChristFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mChristFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("克里斯特", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#黎欧#")) {
-                        mAfterList.add(FOUR_SPACE + mLeoFaceMap.get(face));
-                        mAfterList.add(FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("黎欧");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mLeoFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mLeoFaceMap.get(face));
+                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("黎欧", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("黎欧") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#泽希#")) {
-                        mAfterList.add(FOUR_SPACE + mJesseFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("黎欧");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mJesseFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mJesseFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("泽希", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("泽希") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#艾莉森#")) {
-                        mAfterList.add(FOUR_SPACE + mAlisonFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("艾莉森");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            mAfterList.add(FOUR_SPACE + mAlisonFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("艾莉森", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("艾莉森") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#杜娜#")) {
-                        mAfterList.add(FOUR_SPACE + mDinaFaceMap.get(face));
-                        mAfterList.add(FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("杜娜");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mDinaFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mDinaFaceMap.get(face));
+                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("杜娜", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("杜娜") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#纱妃#")) {
-                        mAfterList.add(FOUR_SPACE + mSophieFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("纱妃");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mSophieFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mSophieFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("纱妃", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("纱妃") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#教皇#") || nextText.startsWith("#裘德#")) {
-                        mAfterList.add(FOUR_SPACE + mJudeFaceMap.get(face));
-                        mAfterList.add(FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("教皇");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mJudeFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mJudeFaceMap.get(face));
+                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("教皇", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("教皇") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#奇路#")) {
-                        mAfterList.add(FOUR_SPACE + mKiluFaceMap.get(face));
-                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        String lastFace = mActorFaceMap.get("奇路");
+                        if (null == lastFace || !face.equals(lastFace)) {
+                            String faceEn = mKiluFaceMap.get(face);
+                            if (null == faceEn || faceEn.length() == 0) {
+                                throw new Exception();
+                            }
+                            mAfterList.add(FOUR_SPACE + mKiluFaceMap.get(face));
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                            mActorFaceMap.put("奇路", face);
+                        }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("奇路") + " \"" + dialogue + "\"");
                     }
                     i++; // 处理两行
