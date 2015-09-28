@@ -114,6 +114,8 @@ public class MainTextProcessingNew {
         mAlisonFaceMap.put("生气", "show alison angry");
         mAlisonFaceMap.put("大笑", "show alison laugh");
         mAlisonFaceMap.put("惊讶", "show alison surprise");
+        mAlisonFaceMap.put("担心", "show alison worry");
+        mAlisonFaceMap.put("伤心", "show alison sad");
 
         mDinaFaceMap.put("正常", "show dina");
         mDinaFaceMap.put("微笑", "show dina");
@@ -162,7 +164,9 @@ public class MainTextProcessingNew {
         mSceneMap.put("舞会", "scene hall");
         mSceneMap.put("小黑屋", "scene darkhouse");
         mSceneMap.put("校内花园早", "scene garden");
+        mSceneMap.put("校园花园早", "scene garden");
         mSceneMap.put("校内花园晚", "scene garden2");
+        mSceneMap.put("校园花园晚", "scene garden2");
         mSceneMap.put("地下室", "scene basement");
         mSceneMap.put("学校正门", "scene gate");
         mSceneMap.put("学生会", "scene office");
@@ -312,7 +316,7 @@ public class MainTextProcessingNew {
                 int index = text.indexOf("#：");
                 String dialogue = text.substring(index + 2);
                 String actor = text.substring(1, index);
-                mAfterList.add(FOUR_SPACE + "\"" + actor + "\"" + " : " + dialogue);
+                mAfterList.add(FOUR_SPACE + "\"" + actor + "\"" + " " + dialogue);
                 continue;
             }
 
