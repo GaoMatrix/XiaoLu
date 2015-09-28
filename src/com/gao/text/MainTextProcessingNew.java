@@ -74,7 +74,7 @@ public class MainTextProcessingNew {
         mChristFaceMap.put("认真", "show christ serious");
         mChristFaceMap.put("大笑", "show christ laugh");
 
-        mChrist2FaceMap.put("正常", "show christ2");
+        mChrist2FaceMap.put("正常", "show christ 2");
         mChrist2FaceMap.put("无奈", "show christ awkward2");
         mChrist2FaceMap.put("惊讶", "show christ surprise2");
         mChrist2FaceMap.put("生气", "show christ angry2");
@@ -98,7 +98,7 @@ public class MainTextProcessingNew {
         mJesseFaceMap.put("惊讶", "show jesse surprise");
         mJesseFaceMap.put("生气", "show jesse angry");
 
-        mJesse2FaceMap.put("正常", "show jesse2");
+        mJesse2FaceMap.put("正常", "show jesse 2");
         mJesse2FaceMap.put("疑问", "show jesse doubt2");
         mJesse2FaceMap.put("微笑", "show jesse smile2");
         mJesse2FaceMap.put("害羞", "show jesse shy2");
@@ -194,6 +194,7 @@ public class MainTextProcessingNew {
     };
 
     private static final String SCENE_ENDING = "with fade";
+    private static final String FACE_NORMAL_ENDING = "with dissolve";
 
     private static List<String> mBeforeList = new ArrayList<String>();
     private static List<String> mAfterList = new ArrayList<String>();
@@ -250,36 +251,45 @@ public class MainTextProcessingNew {
                     System.out.println(text);
                     System.out.println(nextText);
                     String face = text.substring(1);
-                    String dialogue = nextText.split("#：")[1];
+                    String dialogue = nextText.split("#：|#:")[1];
                     if (nextText.startsWith("#蕾雅#")) {
                         mAfterList.add(mLeiaFaceMap.get(face));
                         mAfterList.add(mActorMap.get("蕾雅") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#洛库#")) {
                         mAfterList.add(mLockeFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("洛库") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#克里斯特#")) {
                         mAfterList.add(mChristFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#黎欧#")) {
                         mAfterList.add(mLeoFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("黎欧") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#泽希#")) {
                         mAfterList.add(mJesseFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("泽希") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#艾莉森#")) {
                         mAfterList.add(mAlisonFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("艾莉森") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#杜娜#")) {
                         mAfterList.add(mDinaFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("杜娜") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#纱妃#")) {
                         mAfterList.add(mSophieFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("纱妃") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#教皇#") || nextText.startsWith("#裘德#")) {
                         mAfterList.add(mJudeFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("教皇") + " \"" + dialogue + "\"");
                     } else if (nextText.startsWith("#奇路#")) {
                         mAfterList.add(mKiluFaceMap.get(face));
+                        mAfterList.add(FACE_NORMAL_ENDING);
                         mAfterList.add(mActorMap.get("奇路") + " \"" + dialogue + "\"");
                     }
                     i++; // 处理两行
@@ -302,6 +312,25 @@ public class MainTextProcessingNew {
                 mAfterList.add("\"" + actor + "\"" + " : " + dialogue);
                 continue;
             }
+
+            // 处理△红毛动作
+            if (text.contains("红毛动作")/*text.startsWith("△红毛动作") || text.startsWith("△红毛动作1@") || text.startsWith("△红毛动作2@")*/) {
+                String nextText = mBeforeList.get(i + 1);
+                String face = text.split("@")[1];
+                String dialogue = nextText.split("#：|#:")[1];
+                if (text.startsWith("△红毛动作") || text.startsWith("﻿△红毛动作1")) {
+                    mAfterList.add(mChristFaceMap.get(face));
+                    mAfterList.add(FACE_NORMAL_ENDING);
+                    mAfterList.add(mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
+                } else if (text.startsWith("△红毛动作2")) {
+                    mAfterList.add(mChrist2FaceMap.get(face));
+                    mAfterList.add(FACE_NORMAL_ENDING);
+                    mAfterList.add(mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
+                }
+                i++;
+                continue;
+            }
+
             // 未知情况，暂时都以#进行注释
             mAfterList.add("#" + text);
             /*
