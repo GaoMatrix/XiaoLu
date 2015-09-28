@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -318,8 +319,8 @@ public class MainTextProcessingNew {
                     i++; // 处理两行
                 } catch (Exception e) {
                     // 异常的处理，以#注释掉连续的两句
-                    mAfterList.add("#" + text);
-                    mAfterList.add("#" + nextText);
+                    mAfterList.add(FOUR_SPACE + "#" + text);
+                    mAfterList.add(FOUR_SPACE + "#" + nextText);
                     i++;
                 }
                 continue;
@@ -332,7 +333,8 @@ public class MainTextProcessingNew {
                 int index = text.indexOf("#：");
                 String dialogue = text.substring(index + 2);
                 String actor = text.substring(1, index);
-                mAfterList.add(FOUR_SPACE + "\"" + actor + "\"" + " " + dialogue);
+                mAfterList.add(FOUR_SPACE + "\"" + actor + "\"" + " \""
+                        + dialogue + "\"");
                 continue;
             }
 
@@ -360,7 +362,7 @@ public class MainTextProcessingNew {
             }
 
             // 未知情况，暂时都以#进行注释
-            mAfterList.add("#" + text);
+            mAfterList.add(FOUR_SPACE + "#" + text);
             /*
 
             
@@ -437,23 +439,23 @@ public class MainTextProcessingNew {
                         case 2:
                         case 3:
                         case 4:
-                            dotStr = text.substring(i - count, i + 1);
+                            dotStr = text.substring(i - count, i);
                             text = text.replace(dotStr, "...");
                             break;
                         case 5:
                         case 6:
                         case 7:
-                            dotStr = text.substring(i - count, i +1);
+                            dotStr = text.substring(i - count, i);
                             text = text.replace(dotStr, "......");
                             break;
                         case 8:
                         case 9:
                         case 10:
-                            dotStr = text.substring(i - count, i + 1);
+                            dotStr = text.substring(i - count, i);
                             text = text.replace(dotStr, ".........");
                             break;
                         default:// >= 11
-                            dotStr = text.substring(i - count, i + 1);
+                            dotStr = text.substring(i - count, i);
                             text = text.replace(dotStr, "............");
                             break;
                     }
@@ -497,6 +499,19 @@ public class MainTextProcessingNew {
         if (null == text || text.length() ==0) {
             return false;
         }
+        // @正常
+        // #蕾雅#：家人啊，真好！看你这么高兴，你们感情一定很好！
+        // #艾莉森#：嗯，是啊！是啊！
+        // 这种情况下不能处理成路人甲的形式，要处理成默认表情
+        Iterator iterator = mActorMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+            String actor = "#" + key + "#";
+            if (text.startsWith(actor)) {
+                return false;
+            }
+        }
+
         Pattern pattern = Pattern.compile("^#.*#：.*");
         Matcher matcher = pattern.matcher(text);
         return matcher.find();
