@@ -225,13 +225,14 @@ public class MainTextProcessingNew {
         }
 
         for (int i = 0; i < mBeforeList.size(); i++) {
-            String text = mBeforeList.get(i);
+            String text = mBeforeList.get(i).trim();
+            String spaceStr = getSpaceStr(text);
 
             // 处理时间
             if (text.startsWith("时间：")) {
                 String decodeText = decodeTime(text);
                 if (null != decodeText) {
-                    mAfterList.add(decodeText);
+                    mAfterList.add("    " + decodeText);
                 }
                 continue;
             }
@@ -246,11 +247,12 @@ public class MainTextProcessingNew {
 
             // 对话处理
             if (text.startsWith("@")) {
-                String nextText = mBeforeList.get(i + 1);
+                String nextText = mBeforeList.get(i + 1).trim();
                 try {
                     System.out.println(text);
                     System.out.println(nextText);
-                    String face = text.substring(1);
+                    int index = text.indexOf("@");
+                    String face = text.substring(index + 1);
                     String dialogue = nextText.split("#：|#:")[1];
                     if (nextText.startsWith("#蕾雅#")) {
                         mAfterList.add(mLeiaFaceMap.get(face));
@@ -380,6 +382,28 @@ public class MainTextProcessingNew {
             e.printStackTrace();
         }
 
+    }
+
+
+    /**
+     * 截取开始的空格字符串
+     * @param text
+     * @return
+     */
+    private static String getSpaceStr(String text) {
+        if (null == text || text.length() == 0) {
+            return "";
+        }
+        char[] charArr = text.toCharArray();
+        int count = 0;
+        for (int i = 0; i < charArr.length; i++) {
+            if (charArr[i] == ' ') {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return text.subSequence(0, count).toString();
     }
 
 
