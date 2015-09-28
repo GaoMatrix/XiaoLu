@@ -233,6 +233,22 @@ public class MainTextProcessingNew {
             String text = mBeforeList.get(i).trim();
             String spaceStr = getSpaceStr(text);
 
+            // 处理点好：234变…，567变……，8910变………，11以上变…………1个不变
+            /*if (text.contains("·")) {
+                text = formatDot(text);
+            }*/
+
+            // 处理→
+            if (text.contains("→")) {
+                char[] charArr = text.toCharArray();
+                for (int j = 0; j < charArr.length; j++) {
+                    if (charArr[j] == '→') {
+                        charArr[j] = ' ';
+                    }
+                }
+                text = new String(charArr);
+            }
+
             // 处理时间
             if (text.startsWith("时间：")) {
                 String decodeText = decodeTime(text);
@@ -394,6 +410,61 @@ public class MainTextProcessingNew {
 
     }
 
+    /**
+     * 处理点号：234变…，567变……，8910变………，11以上变…………1个不变
+     * @伤心
+     * #蕾雅#：····
+     * @param text
+     */
+    private static String formatDot(String text) {
+        if (null == text || text.length() == 0) {
+            return "";
+        }
+        char[] charArr = text.toCharArray();
+        int count = 0;
+        for (int i = 0; i < charArr.length; i++) {
+            if (charArr[i] == '·' && i != charArr.length - 1) {
+                count++;
+            } else {
+                    if (charArr[i] == '·' && i == charArr.length - 1) {
+                        count++;
+                    }
+                    String dotStr = "";
+                    switch (count) {
+                        case 0:
+                        case 1:
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                            dotStr = text.substring(i - count, i + 1);
+                            text = text.replace(dotStr, "...");
+                            break;
+                        case 5:
+                        case 6:
+                        case 7:
+                            dotStr = text.substring(i - count, i +1);
+                            text = text.replace(dotStr, "......");
+                            break;
+                        case 8:
+                        case 9:
+                        case 10:
+                            dotStr = text.substring(i - count, i + 1);
+                            text = text.replace(dotStr, ".........");
+                            break;
+                        default:// >= 11
+                            dotStr = text.substring(i - count, i + 1);
+                            text = text.replace(dotStr, "............");
+                            break;
+                    }
+                    count = 0;
+                    continue;
+                }
+        }
+
+        return text;
+    }
+
 
     /**
      * 截取开始的空格字符串
@@ -466,7 +537,7 @@ public class MainTextProcessingNew {
                 builder.append(92 + dayInt);
                 break;
             case 12:
-                builder.append(122 + day);
+                builder.append(122 + dayInt);
                 break;
             default:
                 break;
