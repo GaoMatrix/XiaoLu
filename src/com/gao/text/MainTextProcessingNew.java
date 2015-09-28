@@ -242,13 +242,14 @@ public class MainTextProcessingNew {
 
             // 处理→
             if (text.contains("→")) {
-                char[] charArr = text.toCharArray();
-                for (int j = 0; j < charArr.length; j++) {
-                    if (charArr[j] == '→') {
-                        charArr[j] = ' ';
-                    }
+                text = replaseArrow2Space(text);
+            }
+            String nextText = "";
+            if ((i + 1) != mBeforeList.size()) {
+                nextText = mBeforeList.get(i + 1).trim();
+                if (nextText.contains("→")) {
+                    nextText = replaseArrow2Space(nextText);
                 }
-                text = new String(charArr);
             }
 
             // 处理时间
@@ -275,7 +276,6 @@ public class MainTextProcessingNew {
 
             // 对话处理
             if (text.startsWith("@")) {
-                String nextText = mBeforeList.get(i + 1).trim();
                 try {
                     System.out.println(text);
                     System.out.println(nextText);
@@ -325,7 +325,7 @@ public class MainTextProcessingNew {
                                 throw new Exception();
                             }
                             mAfterList.add(FOUR_SPACE + mLeoFaceMap.get(face));
-                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
                             mActorFaceMap.put("黎欧", face);
                         }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("黎欧") + " \"" + dialogue + "\"");
@@ -357,7 +357,7 @@ public class MainTextProcessingNew {
                                 throw new Exception();
                             }
                             mAfterList.add(FOUR_SPACE + mDinaFaceMap.get(face));
-                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
                             mActorFaceMap.put("杜娜", face);
                         }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("杜娜") + " \"" + dialogue + "\"");
@@ -381,7 +381,7 @@ public class MainTextProcessingNew {
                                 throw new Exception();
                             }
                             mAfterList.add(FOUR_SPACE + mJudeFaceMap.get(face));
-                            mAfterList.add(FACE_NORMAL_ENDING);
+                            mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
                             mActorFaceMap.put("教皇", face);
                         }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("教皇") + " \"" + dialogue + "\"");
@@ -397,6 +397,8 @@ public class MainTextProcessingNew {
                             mActorFaceMap.put("奇路", face);
                         }
                         mAfterList.add(FOUR_SPACE + mActorMap.get("奇路") + " \"" + dialogue + "\"");
+                    } else {
+                        throw new Exception();
                     }
                     i++; // 处理两行
                 } catch (Exception e) {
@@ -422,7 +424,6 @@ public class MainTextProcessingNew {
 
             // 处理△红毛动作
             if (text.contains("红毛动作")/*text.startsWith("△红毛动作") || text.startsWith("△红毛动作1@") || text.startsWith("△红毛动作2@")*/) {
-                String nextText = mBeforeList.get(i + 1);
                 String face = "";
                 try {
                     face = text.split("@")[1];
@@ -492,6 +493,17 @@ public class MainTextProcessingNew {
             e.printStackTrace();
         }
 
+    }
+
+    private static String replaseArrow2Space(String text) {
+        char[] charArr = text.toCharArray();
+        for (int j = 0; j < charArr.length; j++) {
+            if (charArr[j] == '→') {
+                charArr[j] = ' ';
+            }
+        }
+        text = new String(charArr).trim();
+        return text;
     }
 
     /**
