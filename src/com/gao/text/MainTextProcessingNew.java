@@ -86,13 +86,13 @@ public class MainTextProcessingNew {
         mChrist2FaceMap.put("认真", "show christ serious2");
         mChrist2FaceMap.put("大笑", "show christ laugh2");
 
-        mLeoFaceMap.put("正常", "show locke");
-        mLeoFaceMap.put("无奈", "show locke awkward");
-        mLeoFaceMap.put("大笑1", "show locke laugh");
-        mLeoFaceMap.put("大笑2", "show locke laugh2");
-        mLeoFaceMap.put("惊讶", "show locke surprise");
-        mLeoFaceMap.put("认真", "show locke serious");
-        mLeoFaceMap.put("生气", "show locke angry");
+        mLeoFaceMap.put("正常", "show leo");
+        mLeoFaceMap.put("无奈", "show leo awkward");
+        mLeoFaceMap.put("大笑1", "show leo laugh");
+        mLeoFaceMap.put("大笑2", "show leo laugh2");
+        mLeoFaceMap.put("惊讶", "show leo surprise");
+        mLeoFaceMap.put("认真", "show leo serious");
+        mLeoFaceMap.put("生气", "show leo angry");
 
         mJesseFaceMap.put("正常", "show jesse");
         mJesseFaceMap.put("疑问", "show jesse doubt");
