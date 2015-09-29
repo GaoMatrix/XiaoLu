@@ -29,6 +29,8 @@ public class MainTextProcessingNew {
     static HashMap<String, String> mJesseFaceMap = new HashMap<String, String>();
     /**泽希2*/
     static HashMap<String, String> mJesse2FaceMap = new HashMap<String, String>();
+    /**泽希3*/
+    static HashMap<String, String> mJesse3FaceMap = new HashMap<String, String>();
     /**艾莉森*/
     static HashMap<String, String> mAlisonFaceMap = new HashMap<String, String>();
     /**杜娜*/
@@ -55,6 +57,7 @@ public class MainTextProcessingNew {
         mLeiaFaceMap.put("流汗", "$ emo = sweat");
         mLeiaFaceMap.put("疑问", "$ emo = doubt");
         mLeiaFaceMap.put("惊讶", "$ emo = surprise");
+        mLeiaFaceMap.put("生气", "$ emo = angry");
 
         mLockeFaceMap.put("正常", "show locke");
         mLockeFaceMap.put("大笑1", "show locke laugh");
@@ -254,7 +257,14 @@ public class MainTextProcessingNew {
 
             // 处理时间
             if (text.startsWith("时间：")) {
-                String decodeText = decodeTime(text);
+                String decodeText = "";
+                try {
+                    decodeText = decodeTime(text);
+                } catch (Exception e) {
+                    mAfterList.add(FOUR_SPACE + "#" + text);
+                    e.printStackTrace();
+                    continue;
+                }
                 if (null != decodeText) {
                     mAfterList.add(decodeText);
                 }
@@ -423,24 +433,69 @@ public class MainTextProcessingNew {
             }
 
             // 处理△红毛动作
-            if (text.contains("红毛动作")/*text.startsWith("△红毛动作") || text.startsWith("△红毛动作1@") || text.startsWith("△红毛动作2@")*/) {
+            if (text.contains("红毛动作")) {
                 String face = "";
                 try {
                     face = text.split("@")[1];
                 } catch (Exception e) {
                     face = "正常";// 出现异常，一般是没有表情的情况下，使用“正常”表情
                 }
-                String dialogue = nextText.split("#：|#:")[1];
-                if (text.startsWith("△红毛动作") || text.startsWith("﻿△红毛动作1")) {
-                    mAfterList.add(FOUR_SPACE + mChristFaceMap.get(face));
-                    mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
-                    mAfterList.add(FOUR_SPACE + mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
-                } else if (text.startsWith("△红毛动作2")) {
-                    mAfterList.add(FOUR_SPACE + mChrist2FaceMap.get(face));
-                    mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
-                    mAfterList.add(FOUR_SPACE + mActorMap.get("克里斯特") + " \"" + dialogue + "\"");
+                String dialogue = "";
+                try {
+                    dialogue = nextText.split("#：|#:")[1];
+
+                    if (text.startsWith("△红毛动作") || text.startsWith("﻿△红毛动作1")
+                            || text.startsWith("△动作红毛动作1")) {
+                        mAfterList.add(FOUR_SPACE + mChristFaceMap.get(face));
+                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        mAfterList.add(FOUR_SPACE + mActorMap.get("克里斯特")
+                                + " \"" + dialogue + "\"");
+                    } else if (text.startsWith("△红毛动作2")) {
+                        mAfterList.add(FOUR_SPACE + mChrist2FaceMap.get(face));
+                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        mAfterList.add(FOUR_SPACE + mActorMap.get("克里斯特")
+                                + " \"" + dialogue + "\"");
+                    }
+                    i++;
+                } catch (Exception e) {
+                    mAfterList.add(FOUR_SPACE + "#" + text);
+                    e.printStackTrace();
                 }
-                i++;
+                continue;
+            }
+
+            // 处理△小白动作
+            if (text.contains("△小白动作")) {
+                String face = "";
+                try {
+                    face = text.split("@")[1];
+                } catch (Exception e) {
+                    face = "正常";// 出现异常，一般是没有表情的情况下，使用“正常”表情
+                }
+                String dialogue = "";
+                try {
+                    dialogue = nextText.split("#：|#:")[1];
+                    if (text.startsWith("△小白动作1")) {
+                        mAfterList.add(FOUR_SPACE + mJesseFaceMap.get(face));
+                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        mAfterList.add(FOUR_SPACE + mActorMap.get("泽希") + " \""
+                                + dialogue + "\"");
+                    } else if (text.startsWith("△小白动作2")) {
+                        mAfterList.add(FOUR_SPACE + mJesse2FaceMap.get(face));
+                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        mAfterList.add(FOUR_SPACE + mActorMap.get("泽希") + " \""
+                                + dialogue + "\"");
+                    } else if (text.startsWith("△小白动作3")) {
+                        mAfterList.add(FOUR_SPACE + "show jesse closeeye2");
+                        mAfterList.add(FOUR_SPACE + FACE_NORMAL_ENDING);
+                        mAfterList.add(FOUR_SPACE + mActorMap.get("泽希") + " \""
+                                + dialogue + "\"");
+                    }
+                    i++;
+                } catch (Exception e) {
+                    mAfterList.add(FOUR_SPACE + "#" + text);
+                    e.printStackTrace();
+                }
                 continue;
             }
 
@@ -615,8 +670,9 @@ public class MainTextProcessingNew {
     /**
      * 解析日期  时间：8月1日
      * @param text
+     * @throws Exception 
      */
-    private static String decodeTime(String text) {
+    private static String decodeTime(String text) throws Exception{
         System.out.println("text: " + text);
         if (null == text || text.equals("")) {
             return null;
