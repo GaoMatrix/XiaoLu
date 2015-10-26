@@ -10,7 +10,7 @@ import java.util.List;
 public class GetKeyword {
     private static List<String> mBeforeList = new ArrayList<String>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {//test
         File file = new File("text.txt");
         FileUtils fileUtils = new FileUtils();
         try {
